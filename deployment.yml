@@ -25,13 +25,14 @@ spec:
       app: app
   template:
     metadata:
-      app: app
-  spec: 
-    containers:
-    - name: app
-    image: vandoap90/estudo-dio-docker:1.0
-    imagePullPolicy: Always
-    ports: 
-     - containerPort: 3000
+      labels:
+        app: app
+    spec: 
+      containers:
+      - name: app
+        image: vandoap90/estudo-dio-docker:1.0
+        imagePullPolicy: Always
+        ports: 
+        - containerPort: 3000
 
 
