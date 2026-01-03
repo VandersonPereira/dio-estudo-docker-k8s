@@ -79,12 +79,16 @@ jobs:
         run: |
           kubectl get nodes -A
 
-      # Verifica os pods
-      - name: Get pods
-        run: |
-          kubectl get pods -A
-
       # Valida rollout
       - name: Wait for rollout
         run: |
           kubectl rollout status deployment/app
+      
+      # Verifica os pods
+      - name: Get pods
+        run: |
+          kubectl get pods -A
+      
+       # Finaliza pipe
+      - name: Encerramento
+        run: echo "Processo de Deploy Finalizado!"
