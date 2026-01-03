@@ -46,46 +46,45 @@ jobs:
         run: docker push vandoap90/estudo-dio-docker:1.0
 
   deploy:
-  runs-on: ubuntu-latest
-  needs: build
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: actions/checkout@v3
 
-  steps:
-    - uses: actions/checkout@v3
+      # Instala o KIND
+      - name: Install KIND
+        uses: helm/kind-action@v1.8.0
 
-    # Instala o KIND
-    - name: Install KIND
-      uses: helm/kind-action@v1.8.0
+      # Cria o cluster Kubernetes
+      - name: Create KIND cluster
+        run: |
+          kind create cluster --name estudo-dio --wait 60s
 
-    # Cria o cluster Kubernetes
-    - name: Create KIND cluster
-      run: |
-        kind create cluster --name estudo-dio --wait 60s
+      # Mostra informações do cluster
+      - name: Cluster info
+        run: kubectl cluster-info
 
-    # Mostra informações do cluster
-    - name: Cluster info
-      run: kubectl cluster-info
+      # Aplica o deployment
+      - name: Apply Kubernetes manifests
+        run: |
+          kubectl apply -f deployment.yml
 
-    # Aplica o deployment
-    - name: Apply Kubernetes manifests
-      run: |
-        kubectl apply -f deployment.yml
+      # Verifica os serviços
+      - name: Get services
+        run: |
+          kubectl get services -A
 
-    # Verifica os serviços
-    - name: Get services
-      run: |
-        kubectl get services -A
+      # Verifica os nodes
+      - name: Get nodes
+        run: |
+          kubectl get nodes -A
 
-    # Verifica os nodes
-    - name: Get nodes
-      run: |
-        kubectl get nodes -A
-    
-    # Verifica os pods
-    - name: Get pods
-      run: |
-        kubectl get pods -A
+      # Verifica os pods
+      - name: Get pods
+        run: |
+          kubectl get pods -A
 
-    # Valida rollout
-    - name: Wait for rollout
-      run: |
-        kubectl rollout status deployment/nginx
+      # Valida rollout
+      - name: Wait for rollout
+        run: |
+          kubectl rollout status deployment/nginx
